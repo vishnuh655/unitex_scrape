@@ -7,7 +7,7 @@
 To setup the project, run:
 
 ```bash
-cd node_web_scrape
+cd unitex_scrape
 npm install
 ```
 
