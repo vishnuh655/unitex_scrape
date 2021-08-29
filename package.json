@@ -1,0 +1,29 @@
+{
+  "name": "node_web_scrape",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src",
+    "format-code": "prettier -w ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishnuh655/node_web_scrape.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vishnuh655/node_web_scrape/issues"
+  },
+  "homepage": "https://github.com/vishnuh655/node_web_scrape#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "puppeteer": "^10.2.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.2"
+  }
+}
