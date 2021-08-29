@@ -1,8 +1,6 @@
 # Unitex Scrape
 
-## Getting Started
-
-### Installation
+## Installation
 
 To setup the project, run:
 
@@ -11,7 +9,7 @@ cd unitex_scrape
 npm install
 ```
 
-### Run the script
+## Run the script
 
 run:
 
