@@ -4,7 +4,8 @@ import boxen from "boxen";
 import yargs from "yargs";
 import scrapeMarketOverview from "./scrape.js";
 import puppeteerParse from "./parse.js";
-import getUserToken from "./getLoginToken.js";
+import userAuth from "./userAuth.js";
+import unitex from "./unitex.js";
 
 config();
 
@@ -28,8 +29,18 @@ cli.command({
   command: "fetch-token",
   describe: "Fetch User token",
   async handler(argv) {
-    const token = await getUserToken.getUserToken();
+    const token = await userAuth.getUserToken();
     console.log(token);
+  },
+});
+
+// --- FEATURE TEST COMMAND ----
+cli.command({
+  command: "test",
+  describe: "test",
+  async handler(argv) {
+    const data = await unitex.getMarketList();
+    console.log(data);
   },
 });
 
