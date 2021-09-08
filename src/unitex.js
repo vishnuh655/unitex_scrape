@@ -2,6 +2,11 @@ import axios from "axios";
 import userAuth from "./userAuth.js";
 import CONSTANT from "./unitexConstants.js";
 
+const methods = {
+  GET: "get",
+  POST: "post",
+};
+
 /**
  * Common Auth Header
  */
@@ -10,21 +15,31 @@ const authHeader = async () => {
   return { "x-token": `${userAuthToken}`, accept: "application/json" };
 };
 
+const makeRequest = async (method, url, data = {}) => {
+  try {
+    const responseData = await axios({
+      method: method,
+      url: process.env.BASE_URL + url,
+      data: data,
+      headers: { ...(await authHeader()) },
+    });
+    return [responseData.data, true];
+  } catch (error) {
+    return [error.response.status, false];
+  }
+};
+
 /**
  * Gets Market List
  * @returns responseData
  */
 const getMarketList = async () => {
-  try {
-    const responseData = await axios.get(
-      process.env.BASE_URL + "/api/v1/market/list",
-      { headers: { ...(await authHeader()) } }
-    );
-    return responseData.data;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+  const [data, status] = await makeRequest(
+    methods.GET,
+    "/api/v1/market/list/1"
+  );
+  if (status) return data;
+  console.error(data);
 };
 
 /**
@@ -33,17 +48,12 @@ const getMarketList = async () => {
  * @returns responseData
  */
 const getMarketPrice = async (marketId) => {
-  try {
-    const responseData = await axios.get(
-      process.env.BASE_URL +
-        `/api/v1/exchange/market/price?marketId=${marketId}`,
-      { headers: { ...(await authHeader()) } }
-    );
-    return responseData.data;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+  const [data, status] = await makeRequest(
+    methods.GET,
+    `/api/v1/exchange/market/price?marketId=${marketId}`
+  );
+  if (status) return data;
+  console.error(data);
 };
 
 /**
@@ -52,17 +62,12 @@ const getMarketPrice = async (marketId) => {
  * @returns
  */
 const getRecentTrades = async (marketId) => {
-  try {
-    const responseData = await axios.get(
-      process.env.BASE_URL +
-        `/api/v1/exchange/trade/recent?marketId=${marketId}`,
-      { headers: { ...(await authHeader()) } }
-    );
-    return responseData.data;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+  const [data, status] = await makeRequest(
+    methods.GET,
+    `/api/v1/exchange/trade/recent?marketId=${marketId}`
+  );
+  if (status) return data;
+  console.error(data);
 };
 
 /**
@@ -72,24 +77,16 @@ const getRecentTrades = async (marketId) => {
  * @param {int} price
  * @returns
  */
-const buyOrder = async (marketId, amount, price) => {
-  try {
-    const responseData = await axios.post(
-      process.env.BASE_URL + `/api/v1/order/open`,
-      {
-        amount: amount,
-        marketId: marketId,
-        price: price,
-        side: CONSTANT.SIDE.BUY,
-        type: CONSTANT.ORDER_TYPE.MARKET,
-      },
-      { headers: { ...(await authHeader()) } }
-    );
-    return responseData.data;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+const buyOrder = async (marketId, amount, price, sell = false) => {
+  const [data, status] = await makeRequest(methods.POST, `/api/v1/order/open`, {
+    amount: amount,
+    marketId: marketId,
+    price: price,
+    side: sell ? CONSTANT.SIDE.SELL : CONSTANT.SIDE.BUY,
+    type: CONSTANT.ORDER_TYPE.MARKET,
+  });
+  if (status) return data;
+  console.error(data);
 };
 
 /**
@@ -97,20 +94,16 @@ const buyOrder = async (marketId, amount, price) => {
  * @param {int} orderId
  * @returns respomseData
  */
-const sellOrder = async (orderId) => {
-  try {
-    const responseData = await axios.post(
-      process.env.BASE_URL + `/api/v1/order/close`,
-      {
-        orderId: orderId,
-      },
-      { headers: { ...(await authHeader()) } }
-    );
-    return responseData.data;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+const closeOrder = async (orderId) => {
+  const [data, status] = await makeRequest(
+    methods.POST,
+    `/api/v1/order/close`,
+    {
+      orderId: orderId,
+    }
+  );
+  if (status) return data;
+  console.error(data);
 };
 
 export default {
@@ -118,5 +111,5 @@ export default {
   getMarketPrice,
   getRecentTrades,
   buyOrder,
-  sellOrder,
+  closeOrder,
 };

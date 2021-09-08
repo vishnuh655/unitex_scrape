@@ -39,7 +39,7 @@ cli.command({
   command: "test",
   describe: "test",
   async handler(argv) {
-    const data = await unitex.getMarketList();
+    const data = await unitex.closeOrder(3);
     console.log(data);
   },
 });
